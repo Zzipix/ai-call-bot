@@ -16,6 +16,7 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 # === Функция генерации текста ИИ ===
 def get_ai_text():
     try:
+        print("DEBUG: OPENAI_API_KEY =", OPENAI_API_KEY)  # проверяем, подтягивается ли ключ
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
@@ -25,7 +26,7 @@ def get_ai_text():
         )
         return response.choices[0].message.content
     except Exception as e:
-        print("Ошибка OpenAI:", e)
+        print("Ошибка OpenAI:", e)  # выводим полную ошибку в лог
         return "Ошибка генерации текста ИИ"
 
 # === Функция вызова телефона через Voximplant ===
