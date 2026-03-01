@@ -1,35 +1,35 @@
 import os
 import requests
 from fastapi import FastAPI
+import json
 
 app = FastAPI()
 
-# === Переменные окружения (через Railway / .env) ===
+# === Переменные окружения (через Railway) ===
 VOX_ACCOUNT_ID = os.getenv("VOXIMPLANT_ACCOUNT_ID")
 VOX_API_KEY = os.getenv("VOXIMPLANT_API_KEY")
 TARGET_PHONE = os.getenv("TARGET_PHONE")  # +7XXXXXXXXXX
 
-# === Получение текста ИИ / тестового текста ===
+# === Текст для звонка ===
 def get_ai_text():
     return "Привет, братан! Это тестовый звонок."
 
-# === Вызов Voximplant ===
+# === Запуск звонка через Voximplant StartScenarios ===
 def call_phone(text):
     try:
         url = "https://api.voximplant.com/platform_api/StartScenarios/"
-        # Передаём объект JSON, чтобы JS получил phone и text
-        import json
+        # JSON-объект с номером и текстом
         custom_data = json.dumps({
             "phone": TARGET_PHONE,
             "text": text
         })
-        data = {
+        payload = {
             "account_id": VOX_ACCOUNT_ID,
             "api_key": VOX_API_KEY,
             "rule_name": "outbound_call_rule",  # имя твоего правила
             "script_custom_data": custom_data
         }
-        response = requests.post(url, data=data)
+        response = requests.post(url, data=payload)
         return response.text
     except Exception as e:
         print("Ошибка Voximplant:", e)
