@@ -4,25 +4,30 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
-# === Переменные окружения ===
+# === Переменные окружения (через Railway / .env) ===
 VOX_ACCOUNT_ID = os.getenv("VOXIMPLANT_ACCOUNT_ID")
 VOX_API_KEY = os.getenv("VOXIMPLANT_API_KEY")
-TARGET_PHONE = os.getenv("TARGET_PHONE")  # например +7XXXXXXXXXX
+TARGET_PHONE = os.getenv("TARGET_PHONE")  # +7XXXXXXXXXX
 
-# === Текст, который будет произноситься ===
+# === Получение текста ИИ / тестового текста ===
 def get_ai_text():
     return "Привет, братан! Это тестовый звонок."
 
-# === Запуск звонка через StartScenarios ===
+# === Вызов Voximplant ===
 def call_phone(text):
     try:
         url = "https://api.voximplant.com/platform_api/StartScenarios/"
+        # Передаём объект JSON, чтобы JS получил phone и text
+        import json
+        custom_data = json.dumps({
+            "phone": TARGET_PHONE,
+            "text": text
+        })
         data = {
             "account_id": VOX_ACCOUNT_ID,
             "api_key": VOX_API_KEY,
-            "rule_name": "bratela",  # имя твоего правила
-            "script_custom_data": text,
-            "phone": TARGET_PHONE
+            "rule_name": "outbound_call_rule",  # имя твоего правила
+            "script_custom_data": custom_data
         }
         response = requests.post(url, data=data)
         return response.text
