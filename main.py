@@ -18,7 +18,6 @@ def get_ai_text():
 def call_phone(text):
     try:
         url = "https://api.voximplant.com/platform_api/StartScenarios/"
-        # JSON с номером и текстом
         custom_data = json.dumps({
             "phone": TARGET_PHONE,
             "text": text
