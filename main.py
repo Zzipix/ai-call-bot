@@ -5,7 +5,7 @@ import json
 
 app = FastAPI()
 
-# === Переменные окружения (Railway / .env) ===
+# === Переменные окружения (.env или Railway) ===
 VOX_ACCOUNT_ID = os.getenv("VOXIMPLANT_ACCOUNT_ID")
 VOX_API_KEY = os.getenv("VOXIMPLANT_API_KEY")
 TARGET_PHONE = os.getenv("TARGET_PHONE")  # +7XXXXXXXXXX
@@ -25,7 +25,7 @@ def call_phone(text):
         payload = {
             "account_id": VOX_ACCOUNT_ID,
             "api_key": VOX_API_KEY,
-            "rule_name": "outbound_call_rule",  # имя твоего правила
+            "rule_name": "outbound_call_rule",  # имя твоего правила в Voximplant
             "script_custom_data": custom_data
         }
         response = requests.post(url, data=payload)
